@@ -1,2 +1,53 @@
-<meta http-equiv="refresh" content="0; url=https://forms.gle/5bxVr7yazJtkZ15DA">
-<title>Redirecting...</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Loading...</title>
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #ffffff;
+        font-family: Arial, sans-serif;
+    }
+
+    .loader {
+        width: 60px;
+        height: 60px;
+        border: 6px solid #ddd;
+        border-top-color: #000;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .text {
+        margin-top: 20px;
+        font-size: 16px;
+        text-align: center;
+        color: #333;
+    }
+</style>
+
+<script>
+    setTimeout(function() {
+        window.location.href = "https://forms.gle/5bxVr7yazJtkZ15DA";
+    }, 1500); // 1.5 detik sebelum redirect
+</script>
+
+</head>
+<body>
+
+<div style="text-align:center;">
+    <div class="loader"></div>
+    <div class="text">Mengarahkan ke formulir...</div>
+</div>
+
+</body>
+</html>
