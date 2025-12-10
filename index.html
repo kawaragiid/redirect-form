@@ -58,7 +58,34 @@
         to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ==== LOGO (BESARKAN) ==== */
+    /* ==== APPLE WINDOW BUTTONS ==== */
+    .window-buttons {
+        position: absolute;
+        top: 16px;
+        left: 18px;
+        display: flex;
+        gap: 8px;
+        opacity: 0;
+        animation: fadeButtons 0.8s ease forwards 0.35s;
+    }
+
+    @keyframes fadeButtons {
+        from { opacity: 0; transform: scale(0.85); }
+        to   { opacity: 1; transform: scale(1); }
+    }
+
+    .btn-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+    }
+
+    .btn-close  { background: #ff5f57; } /* merah */
+    .btn-min    { background: #ffbd2e; } /* kuning */
+    .btn-max    { background: #28c840; } /* hijau */
+
+    /* ==== LOGO ==== */
     .logo {
         width: 125px;
         opacity: 0;
@@ -93,7 +120,6 @@
         100% { border-top-color: #42a5f5; }
     }
 
-    /* ==== TEXT ==== */
     .text {
         color: #ffffff;
         margin-top: 20px;
@@ -138,10 +164,9 @@
 </style>
 
 <script>
-    /* Jalankan redirect setelah animasi “swipe up” */
     setTimeout(function() {
         window.location.href = "https://forms.gle/5bxVr7yazJtkZ15DA";
-    }, 4500); // 4.5 detik → memberi waktu swipe up muncul dulu
+    }, 4500);
 </script>
 
 </head>
@@ -151,15 +176,23 @@
 <div class="bg-anim"></div>
 
 <div class="glass-box">
+
+    <!-- MACOS WINDOW DOTS -->
+    <div class="window-buttons">
+        <div class="btn-dot btn-close"></div>
+        <div class="btn-dot btn-min"></div>
+        <div class="btn-dot btn-max"></div>
+    </div>
+
     <img src="logo.png" class="logo" alt="Logo">
 
     <div class="loader"></div>
 
     <div class="text">Mengarahkan ke formulir…</div>
 
-    <!-- Swipe up animation -->
     <div class="swipe">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ffffffd0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ffffffd0" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 18V6" />
             <path d="M6 12l6-6 6 6" />
         </svg>
