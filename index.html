@@ -122,24 +122,25 @@ body {
     padding: 40px 30px;
     border-radius: 32px;
     
-    /* Liquid Glass Effect ala Apple */
+    /* MODIFIED: Liquid Glass Effect - LEBIH TRANSPARAN */
     background: linear-gradient(
         135deg, 
-        rgba(255, 255, 255, 0.25), 
-        rgba(255, 255, 255, 0.05)
+        rgba(255, 255, 255, 0.10), /* Dikurangi agar lebih bening */
+        rgba(255, 255, 255, 0.02)
     );
-    backdrop-filter: blur(50px) saturate(140%);
-    -webkit-backdrop-filter: blur(50px) saturate(140%);
+    /* Blur sedikit dikurangi agar background di belakang lebih terlihat */
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
     
-    /* Border halus untuk efek 3D */
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    /* Border lebih tipis dan transparan */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
     
-    /* Shadow berlapis untuk kedalaman */
+    /* Shadow tetap ada untuk kedalaman 3D */
     box-shadow: 
         0 30px 60px rgba(0, 0, 0, 0.4), 
-        inset 0 0 0 1px rgba(255, 255, 255, 0.15); /* Inner rim light */
+        inset 0 0 0 1px rgba(255, 255, 255, 0.1); /* Inner rim light */
         
     text-align: center;
     
@@ -262,12 +263,15 @@ body {
 
 /* Hint Text untuk sound */
 .tap-hint {
-    font-size: 10px;
-    opacity: 0.5;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--matte-green);
     margin-bottom: 5px;
     animation: pulse 2s infinite;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
-@keyframes pulse { 0% {opacity:0.3} 50% {opacity:0.7} 100% {opacity:0.3} }
+@keyframes pulse { 0% {opacity:0.4} 50% {opacity:1} 100% {opacity:0.4} }
 
 
 /* Button */
@@ -326,7 +330,7 @@ body {
 
     <!-- Video Portrait (HP/Mobile) -->
     <video autoplay muted loop playsinline class="video-background" id="vid-portrait">
-        <source src="pot.mp4" type="video/mp4">
+        <source src="https://videos.pexels.com/video-files/4057314/4057314-hd_1080_1920_25fps.mp4" type="video/mp4">
     </video>
 
     <!-- Background Blobs -->
@@ -358,10 +362,10 @@ body {
             <div class="countdown-text" id="countdown">10</div>
         </div>
 
-        <div id="status" class="text">Mengarahkan dalam 10 detik…</div>
+        <div id="status" class="text">Ketuk Layar untuk Memulai</div>
 
         <!-- Hint kecil agar user tahu tap layar akan menyalakan suara -->
-        <div class="tap-hint" id="soundHint">Tap layar untuk suara 🔊</div>
+        <div class="tap-hint" id="soundHint">KLIK / TAP DI SINI</div>
 
         <button class="motivation-button" id="quoteBtn">✨ Ubah Kutipan</button>
         <div id="quote-display">“Siapa monster sebenarnya?”</div>
@@ -370,35 +374,27 @@ body {
     </div>
 
 <script>
-/* Audio Auto-Unmute Logic 
-   Browser tidak mengizinkan autoplay dengan suara tanpa interaksi user.
-   Script ini menyalakan suara saat user tap/klik di mana saja pertama kali.
+/* LOGIKA BARU: START EXPERIENCE
+   1. Countdown diam di angka 10.
+   2. Video jalan tapi Muted.
+   3. Ketika user klik dimanapun:
+      - Video Unmute
+      - Countdown mulai berjalan
 */
-function enableSound() {
-    const vids = document.querySelectorAll('video');
-    vids.forEach(v => {
-        v.muted = false; // Matikan bisu
-        // Pastikan play ulang jika sempat terhenti
-        v.play().catch(error => {
-            console.log("Autoplay audio blocked until interaction");
-        });
-    });
-    
-    // Hilangkan hint setelah suara aktif
-    const hint = document.getElementById('soundHint');
-    if(hint) hint.style.opacity = '0';
 
-    // Hapus listener agar tidak dijalankan berulang kali
-    document.removeEventListener('click', enableSound);
-    document.removeEventListener('touchstart', enableSound);
-}
+let time = 10;
+let cycle = 0;
+let isStarted = false; // Flag untuk memastikan tidak double start
+let timer = null; // Variable timer disimpan disini
 
-// Pasang pendengar interaksi di seluruh body
-document.addEventListener('click', enableSound);
-document.addEventListener('touchstart', enableSound);
+const cd = document.getElementById("countdown");
+const statusText = document.getElementById("status");
+const mainCard = document.getElementById("mainCard");
+const tapHint = document.getElementById("soundHint");
+const quoteDisplay = document.getElementById("quote-display");
+const quoteBtn = document.getElementById("quoteBtn");
 
-
-/* Quotes System */
+// Quotes System
 const quotes = [
     "“Siapa monster sebenarnya?”",
     "“Kalau aku hilang, apakah ada yang akan mencariku?”",
@@ -409,11 +405,7 @@ const quotes = [
     "“Masa depan adalah milik mereka yang percaya pada mimpi.”"
 ];
 
-const quoteDisplay = document.getElementById("quote-display");
-const quoteBtn = document.getElementById("quoteBtn");
-
 function setRandomQuote() {
-    // Efek fade out-in
     quoteDisplay.style.opacity = 0;
     setTimeout(() => {
         quoteDisplay.innerText = quotes[Math.floor(Math.random()*quotes.length)];
@@ -421,43 +413,67 @@ function setRandomQuote() {
     }, 200);
 }
 
-quoteBtn.addEventListener("click", setRandomQuote);
+quoteBtn.addEventListener("click", (e) => {
+    e.stopPropagation(); // Mencegah klik tombol mentrigger startExperience jika belum mulai
+    setRandomQuote();
+    // Jika user klik tombol tapi belum start, kita anggap itu juga sinyal start
+    if(!isStarted) startExperience();
+});
 
-/* Countdown Logic */
-let time = 10;
-let cycle = 0;
+// FUNGSI UTAMA UNTUK MEMULAI SEMUANYA
+function startExperience() {
+    if (isStarted) return; // Stop jika sudah berjalan
+    isStarted = true;
 
-const cd = document.getElementById("countdown");
-const statusText = document.getElementById("status");
-const mainCard = document.getElementById("mainCard");
+    // 1. Unmute Video
+    const vids = document.querySelectorAll('video');
+    vids.forEach(v => {
+        v.muted = false;
+        v.play().catch(error => console.log("Video play error:", error));
+    });
 
+    // 2. Hilangkan Hint & Listener
+    if(tapHint) tapHint.style.opacity = '0';
+    document.removeEventListener('click', startExperience);
+    document.removeEventListener('touchstart', startExperience);
+
+    // 3. Mulai Countdown
+    statusText.innerText = `Mengarahkan dalam ${time} detik…`;
+    
+    timer = setInterval(() => {
+        time--;
+        cd.innerText = time;
+        statusText.innerText = `Mengarahkan dalam ${time} detik…`;
+
+        cycle++;
+        if (cycle === 3) {
+            setRandomQuote();
+            cycle = 0;
+        }
+
+        if (time <= 0) {
+            clearInterval(timer);
+            cd.innerText = "GO";
+            statusText.innerText = "Membuka...";
+            
+            setTimeout(() => {
+                mainCard.classList.add("unlock-screen");
+            }, 300);
+
+            setTimeout(() => {
+                window.location.href = "https://forms.gle/5bxVr7yazJtkZ15DA";
+            }, 1200);
+        }
+    }, 1000);
+}
+
+// Pasang pendengar interaksi
+document.addEventListener('click', startExperience);
+document.addEventListener('touchstart', startExperience);
+
+// Init transisi
 quoteDisplay.style.transition = "opacity 0.2s";
 
-const timer = setInterval(() => {
-    time--;
-    cd.innerText = time;
-    statusText.innerText = `Mengarahkan dalam ${time} detik…`;
-
-    cycle++;
-    if (cycle === 3) {
-        setRandomQuote();
-        cycle = 0;
-    }
-
-    if (time <= 0) {
-        clearInterval(timer);
-        cd.innerText = "GO";
-        statusText.innerText = "Membuka...";
-        
-        setTimeout(() => {
-            mainCard.classList.add("unlock-screen");
-        }, 300);
-
-        setTimeout(() => {
-            window.location.href = "https://forms.gle/5bxVr7yazJtkZ15DA";
-        }, 1200);
-    }
-}, 1000);
 </script>
 
 </body>
