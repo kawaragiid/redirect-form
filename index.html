@@ -13,105 +13,108 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: "Inter", sans-serif;
         background: #000;
     }
 
-    /* ==== BACKGROUND ==== */
+    /* BACKGROUND */
     .bg-anim {
         position: absolute;
-        width: 250%;
-        height: 250%;
+        width: 240%;
+        height: 240%;
         background:
-            radial-gradient(circle at 10% 80%, rgba(34, 197, 94, 0.2), transparent 40%),
-            radial-gradient(circle at 90% 20%, rgba(59, 130, 246, 0.2), transparent 40%),
-            radial-gradient(circle at 50% 50%, rgba(249, 115, 22, 0.2), transparent 40%);
+            radial-gradient(circle at 10% 80%, rgba(34,197,94,.22), transparent 40%),
+            radial-gradient(circle at 90% 20%, rgba(59,130,246,.22), transparent 40%),
+            radial-gradient(circle at 50% 50%, rgba(249,115,22,.22), transparent 40%);
         filter: blur(96px);
-        animation: moveBg 25s ease-in-out infinite alternate;
+        animation: moveBg 22s ease-in-out infinite alternate;
         z-index: 1;
     }
 
     @keyframes moveBg {
         0% { transform: translate(-20%, -20%) scale(1.05); }
-        33% { transform: translate(15%, 5%) scale(1.15); }
-        66% { transform: translate(-5%, 15%) scale(1.05); }
+        33% { transform: translate(15%, 5%) scale(1.12); }
+        66% { transform: translate(-5%, 15%) scale(1.04); }
         100% { transform: translate(-20%, -20%) scale(1.05); }
     }
 
-    /* ==== GLASS BOX ==== */
     .glass-box {
         position: relative;
         width: 90%;
         max-width: 380px;
         padding: 40px 32px 32px;
         border-radius: 35px;
-        background: rgba(255,255,255,0.2);
+        background: rgba(255,255,255,0.17);
         backdrop-filter: blur(65px);
-        border: 1px solid rgba(255,255,255,0.5);
+        border: 1px solid rgba(255,255,255,0.45);
         text-align: center;
         z-index: 2;
-        animation: fadeUp 0.8s ease forwards;
     }
 
-    @keyframes fadeUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to   { opacity: 1; transform: translateY(0); }
+    .window-buttons {
+        position: absolute;
+        top: 14px;
+        left: 16px;
+        display: flex;
+        gap: 8px;
     }
+    .btn-dot {
+        width: 12px; height: 12px;
+        border-radius: 50%;
+        box-shadow: 0 2px 6px rgba(0,0,0,.7);
+    }
+    .btn-close { background: #FF5252; }
+    .btn-min { background: #FFEB3B; }
+    .btn-max { background: #69F0AE; }
 
     .logo-section {
-        padding-bottom: 16px;
-        margin-bottom: 18px;
-        border-bottom: 1px solid rgba(255,255,255,0.25);
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(255,255,255,.25);
+        padding-bottom: 20px;
     }
+    .logo-icon { font-size: 72px; }
+    .logo-title { font-size: 29px; font-weight: 800; color: #fff; }
 
-    .logo-icon {
-        font-size: 74px;
-        margin-bottom: 6px;
-    }
-
-    .logo-title {
-        font-size: 30px;
-        font-weight: 800;
-        color: #fff;
-    }
-
-    /* ==== LOADER ==== */
+    /* PERFECT CENTERED LOADER + COUNTDOWN */
     .loader-container {
-        margin: 20px auto 10px auto;
-        width: 82px;
-        height: 82px;
+        width: 90px;
+        height: 90px;
         position: relative;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .loader {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
+        width: 90px;
+        height: 90px;
         border: 6px solid rgba(255,255,255,0.35);
         border-top-color: #4CAF50;
-        animation: spin 1.3s linear infinite;
+        border-radius: 50%;
+        animation: spin 1.2s linear infinite;
+        position: absolute;
+        top: 0; left: 0;
     }
 
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     .countdown-text {
         position: absolute;
-        inset: 0;
         display: flex;
-        align-items: center;
         justify-content: center;
-        font-size: 34px;
-        font-weight: 700;
+        align-items: center;
+        width: 90px;
+        height: 90px;
+        font-size: 36px;
         color: #fff;
+        font-weight: 700;
+        line-height: 1;
         text-shadow: 0 0 10px #000;
-        transform: translateY(2px);
     }
 
-    /* Status text */
     .text {
-        margin-top: 12px;
+        margin-top: 16px;
         font-size: 17px;
         color: #fff;
     }
@@ -127,25 +130,7 @@
         50% { text-shadow: 0 0 16px rgba(105,240,174,1); }
     }
 
-    /* Window Dots */
-    .window-buttons {
-        position: absolute;
-        top: 16px;
-        left: 18px;
-        display: flex;
-        gap: 8px;
-    }
-    .btn-dot {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.8);
-    }
-    .btn-close { background:#FF5252; }
-    .btn-min { background:#FFEB3B; }
-    .btn-max { background:#69F0AE; }
-
-    /* Motivasi / Quotes */
+    /* BUTTON */
     .motivation-button {
         width: 100%;
         margin-top: 22px;
@@ -161,9 +146,9 @@
     }
 
     #quote-display {
-        margin-top: 12px;
+        margin-top: 14px;
         min-height: 25px;
-        color: #ffffffd9;
+        color: #fff;
         font-style: italic;
         font-size: 15px;
     }
@@ -171,7 +156,7 @@
     .credit {
         margin-top: 28px;
         font-size: 12px;
-        color: rgba(255,255,255,0.9);
+        color: rgba(255,255,255,.95);
     }
 </style>
 </head>
@@ -180,7 +165,7 @@
 
 <div class="bg-anim"></div>
 
-<div class="glass-box" id="glass-box">
+<div class="glass-box">
 
     <div class="window-buttons">
         <div class="btn-dot btn-close"></div>
@@ -193,7 +178,7 @@
         <h1 class="logo-title">KALENDER SOYA</h1>
     </div>
 
-    <!-- LOADER -->
+    <!-- LOADER + PERFECT CENTER COUNTDOWN -->
     <div class="loader-container">
         <div class="loader"></div>
         <div class="countdown-text" id="countdown"></div>
@@ -201,62 +186,57 @@
 
     <div id="status" class="text">Mengarahkan dalam 10 detik…</div>
 
-    <!-- Manual Quotes -->
-    <button class="motivation-button" id="quoteBtn">
-        ✨ Kutipan Dari Film Monster
-    </button>
-
-    <div id="quote-display">Klik untuk mendapatkan kutipan.</div>
+    <button class="motivation-button" id="quoteBtn">✨ Ubah Kutipan</button>
+    <div id="quote-display"></div>
 
     <div class="credit">PREMIUM UI | Design by KEIGO</div>
 </div>
 
 <script>
-    /* ======================
-       MANUAL QUOTES MONSTER
-       ====================== */
-    const quotes = [
-        "“Siapa monster sebenarnya?”",
-        "“Kalau aku hilang, apakah ada yang akan mencariku?”",
-        "“Orang dewasa tidak selalu benar.”",
-        "“Kadang suara yang paling penting justru tidak terdengar.”",
-        "“Kita hanya ingin dipercaya.”",
-        "“Jika dunia tidak mengerti kita, apakah kita tetap salah?”"
-    ];
+/* ======== QUOTES MONSTER ========= */
+const quotes = [
+    "“Siapa monster sebenarnya?”",
+    "“Kalau aku hilang, apakah ada yang akan mencariku?”",
+    "“Orang dewasa tidak selalu benar.”",
+    "“Kadang suara yang paling penting justru tidak terdengar.”",
+    "“Kita hanya ingin dipercaya.”",
+    "“Jika dunia tidak mengerti kita, apakah kita tetap salah?”",
+];
 
-    document.getElementById("quoteBtn").addEventListener("click", () => {
-        const q = quotes[Math.floor(Math.random() * quotes.length)];
-        document.getElementById("quote-display").innerText = q;
-    });
+const quoteDisplay = document.getElementById("quote-display");
+function setRandomQuote() {
+    quoteDisplay.innerText = quotes[Math.floor(Math.random() * quotes.length)];
+}
+document.getElementById("quoteBtn").addEventListener("click", setRandomQuote);
 
+/* ======== AUTO COUNTDOWN + AUTO QUOTE ======== */
+let time = 10;
+const cd = document.getElementById("countdown");
+const statusText = document.getElementById("status");
 
-    /* ======================
-       COUNTDOWN
-       ====================== */
-    const REDIRECT_URL = "https://forms.gle/5bxVr7yazJtkZ15DA";
-    let timeLeft = 10;
-    const cd = document.getElementById("countdown");
-    const status = document.getElementById("status");
+cd.innerText = time;
+setRandomQuote();
 
-    cd.innerText = timeLeft;
+const timer = setInterval(() => {
+    time--;
+    cd.innerText = time;
 
-    const timer = setInterval(() => {
-        timeLeft--;
-        cd.innerText = timeLeft;
+    // ganti quote otomatis setiap detik
+    setRandomQuote();
 
-        status.innerText = `Mengarahkan dalam ${timeLeft} detik…`;
+    statusText.innerText = `Mengarahkan dalam ${time} detik…`;
 
-        if (timeLeft <= 0) {
-            clearInterval(timer);
-            cd.innerText = "GO";
-            status.innerText = "Mengalihkan…";
-            status.classList.add("ready");
+    if (time <= 0) {
+        clearInterval(timer);
+        cd.innerText = "GO";
+        statusText.innerText = "Mengalihkan…";
+        statusText.classList.add("ready");
 
-            setTimeout(() => {
-                window.location.href = REDIRECT_URL;
-            }, 1200);
-        }
-    }, 1000);
+        setTimeout(() => {
+            window.location.href = "https://forms.gle/5bxVr7yazJtkZ15DA";
+        }, 1100);
+    }
+}, 1000);
 </script>
 
 </body>
