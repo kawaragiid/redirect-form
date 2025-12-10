@@ -113,33 +113,19 @@ body {
     100% { transform: translate(20px, -20px) scale(1.1); }
 }
 
-/* ============= LIQUID GLASS CARD ============= */
+/* ============= GLASS CARD ============= */
 .glass-box {
     position: relative;
     width: 85%;
     max-width: 360px;
     padding: 40px 30px;
     border-radius: 32px;
-    
-    /* Liquid Glass Effect ala Apple */
-    background: linear-gradient(
-        135deg, 
-        rgba(255, 255, 255, 0.25), 
-        rgba(255, 255, 255, 0.05)
-    );
-    backdrop-filter: blur(50px) saturate(140%);
-    -webkit-backdrop-filter: blur(50px) saturate(140%);
-    
-    /* Border halus untuk efek 3D */
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-    
-    /* Shadow berlapis untuk kedalaman */
-    box-shadow: 
-        0 30px 60px rgba(0, 0, 0, 0.4), 
-        inset 0 0 0 1px rgba(255, 255, 255, 0.15); /* Inner rim light */
-        
+    /* Glassmorphism yang lebih halus */
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
     text-align: center;
     
     /* Persiapan animasi exit (Unlock) */
@@ -305,20 +291,15 @@ body {
         VIDEO BACKGROUND 
         Ganti 'src' dengan URL video asli Anda.
         Saya menggunakan video placeholder alam bebas hak cipta sebagai contoh.
-        
-        CATATAN AUDIO:
-        - Atribut 'muted' telah dihapus.
-        - Kebijakan browser mungkin memblokir autoplay jika ada suara.
-        - User harus berinteraksi dengan halaman agar video mulai berputar jika diblokir browser.
     -->
     
     <!-- Video Landscape (Desktop/Tablet) -->
-    <video autoplay loop playsinline class="video-background" id="vid-landscape">
+    <video autoplay unmuted loop playsinline class="video-background" id="vid-landscape">
         <source src="https://videos.pexels.com/video-files/3129671/3129671-hd_1920_1080_30fps.mp4" type="video/mp4">
     </video>
 
     <!-- Video Portrait (HP/Mobile) -->
-    <video autoplay loop playsinline class="video-background" id="vid-portrait">
+    <video autoplay unmuted loop playsinline class="video-background" id="vid-portrait">
         <source src="pot.mp4" type="video/mp4">
     </video>
 
