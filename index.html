@@ -28,6 +28,37 @@ body {
     color: white;
 }
 
+/* ============= BACKGROUND VIDEO ============= */
+.video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -5; /* Di belakang blobs dan konten */
+    opacity: 0.3; /* Opacity 30% sesuai request */
+    pointer-events: none; /* Agar tidak bisa diklik */
+}
+
+/* Logika Display Video Berdasarkan Ukuran Layar */
+#vid-landscape {
+    display: block;
+}
+#vid-portrait {
+    display: none;
+}
+
+/* Jika layar HP / Portrait (lebar max 768px) */
+@media (max-width: 768px) {
+    #vid-landscape {
+        display: none;
+    }
+    #vid-portrait {
+        display: block;
+    }
+}
+
 /* ============= BACKGROUND BLUR (APPLE STYLE) ============= */
 .background-blobs {
     position: absolute;
@@ -35,8 +66,9 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;
+    z-index: -2; /* Di atas video, di bawah konten */
     overflow: hidden;
+    pointer-events: none;
 }
 
 .blob {
@@ -255,7 +287,23 @@ body {
 
 <body>
 
-    <!-- Background Blobs for Matte Effect -->
+    <!-- 
+        VIDEO BACKGROUND 
+        Ganti 'src' dengan URL video asli Anda.
+        Saya menggunakan video placeholder alam bebas hak cipta sebagai contoh.
+    -->
+    
+    <!-- Video Landscape (Desktop/Tablet) -->
+    <video autoplay muted loop playsinline class="video-background" id="vid-landscape">
+        <source src="https://videos.pexels.com/video-files/3129671/3129671-hd_1920_1080_30fps.mp4" type="video/mp4">
+    </video>
+
+    <!-- Video Portrait (HP/Mobile) -->
+    <video autoplay muted loop playsinline class="video-background" id="vid-portrait">
+        <source src="pot.mp4" type="video/mp4">
+    </video>
+
+    <!-- Background Blobs for Matte Effect (Tetap ada di atas video untuk tint warna) -->
     <div class="background-blobs">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
