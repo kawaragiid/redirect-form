@@ -1,91 +1,89 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Redirecting...</title>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Mengarahkan...</title>
 
-    <style>
-      body {
+<style>
+    body {
         margin: 0;
         height: 100vh;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        background: #ffffff;
         font-family: "Inter", Arial, sans-serif;
-        animation: fadeIn 0.5s ease;
-      }
+        background: linear-gradient(135deg, #e3f2fd, #fff, #e8f5e9);
+        animation: fadeIn 0.7s ease;
+    }
 
-      @keyframes fadeIn {
-        0% {
-          opacity: 0;
-          transform: translateY(10px);
-        }
-        100% {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(10px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
 
-      /* LOGO */
-      .logo {
-        width: 90px;
+    /* LOGO */
+    .logo {
+        width: 95px;
         opacity: 0;
-        animation: fadeUp 0.8s ease 0.2s forwards;
-        margin-bottom: 25px;
-      }
+        animation: fadeUp 1s ease 0.2s forwards;
+        margin-bottom: 28px;
+    }
 
-      @keyframes fadeUp {
-        0% {
-          opacity: 0;
-          transform: translateY(10px);
-        }
-        100% {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
+    @keyframes fadeUp {
+        0% { opacity: 0; transform: translateY(12px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
 
-      /* SPINNER PREMIUM */
-      .loader {
-        width: 55px;
-        height: 55px;
-        border: 5px solid #e5e5e5;
-        border-top-color: #000000;
+    /* MULTICOLOR LOADER */
+    .loader {
+        width: 65px;
+        height: 65px;
         border-radius: 50%;
-        animation: spin 1s ease-in-out infinite;
-      }
+        border: 6px solid #ddd;
+        border-top-color: #42a5f5; /* Biru */
+        animation: spin 1.2s ease-in-out infinite, colorCycle 3s ease infinite;
+    }
 
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
 
-      /* TEXT */
-      .text {
-        margin-top: 18px;
-        font-size: 15px;
+    /* Warna berubah smooth: biru → orange → hijau */
+    @keyframes colorCycle {
+        0% { border-top-color: #42a5f5; }   /* Biru */
+        33% { border-top-color: #fb8c00; }  /* Orange */
+        66% { border-top-color: #43a047; }  /* Hijau */
+        100% { border-top-color: #42a5f5; } /* Balik ke biru */
+    }
+
+    .text {
+        margin-top: 20px;
+        font-size: 16px;
         color: #333;
         opacity: 0;
-        animation: fadeUp 0.8s ease 0.4s forwards;
-      }
-    </style>
+        animation: fadeUp 1s ease 0.5s forwards;
+    }
+</style>
 
-    <script>
-      setTimeout(function () {
+<script>
+    setTimeout(function() {
         window.location.href = "https://forms.gle/5bxVr7yazJtkZ15DA";
-      }, 1500); // redirect setelah 1.5 detik
-    </script>
-  </head>
-  <body>
-    <!-- GANTI LOGO DI SINI -->
-    <img src="logo.png" class="logo" alt="Logo" />
-    <div class="loader"></div>
-    <div class="text">Mengarahkan ke formulir…</div>
-  </body>
+    }, 3000); // redirect setelah 3 detik
+</script>
+
+</head>
+<body>
+
+<!-- LOGO -->
+<img src="logo.png" class="logo" alt="Logo">
+
+<!-- LOADER -->
+<div class="loader"></div>
+
+<!-- TEXT -->
+<div class="text">Mengarahkan ke formulir…</div>
+
+</body>
 </html>
