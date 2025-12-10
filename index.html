@@ -2,139 +2,143 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>KALENDER SOYA</title>
 
 <style>
-    body {
-        margin: 0;
-        height: 100vh;
-        overflow: hidden;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-family: "Inter", sans-serif;
-        background: radial-gradient(circle at 20% 30%, #2b1405, #000814);
-    }
+/* ============= THEME COLORS ============= */
+:root {
+    --orange: #F97316;
+    --blue:   #3B82F6;
+    --green:  #10B981;
+}
 
-    .glass-box {
-        position: relative;
-        width: 90%;
-        max-width: 380px;
-        padding: 40px 32px;
-        border-radius: 30px;
-        background: rgba(255,255,255,0.14);
-        backdrop-filter: blur(55px);
-        border: 1px solid rgba(255,255,255,0.35);
-        text-align: center;
-        box-shadow: 0 20px 40px rgba(0,0,0,.35);
-    }
+/* ============= BASE STYLE ============= */
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at 25% 30%, rgba(249,115,22,0.25), transparent),
+                radial-gradient(circle at 70% 70%, rgba(59,130,246,0.2), transparent),
+                #000;
+    font-family: "Inter", sans-serif;
+}
 
-    /* Window dots */
-    .window-buttons {
-        position: absolute;
-        top: 16px;
-        left: 18px;
-        display: flex;
-        gap: 8px;
-    }
-    .btn-dot {
-        width: 12px; height: 12px;
-        border-radius: 50%;
-        box-shadow: 0 2px 6px rgba(0,0,0,.6);
-    }
-    .btn-close { background:#ff5f57; }
-    .btn-min { background:#ffbd2e; }
-    .btn-max { background:#28c840; }
+.glass-box {
+    position: relative;
+    width: 90%;
+    max-width: 380px;
+    padding: 40px 32px;
+    border-radius: 28px;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(60px);
+    border: 1px solid rgba(255,255,255,0.25);
+    text-align: center;
+    box-shadow: 0 16px 40px rgba(0,0,0,.4);
+}
 
-    .logo-section {
-        margin-bottom: 20px;
-        border-bottom: 1px solid rgba(255,255,255,.25);
-        padding-bottom: 20px;
-    }
-    .logo-icon { font-size: 68px; }
-    .logo-title {
-        font-size: 28px;
-        font-weight: 800;
-        color: #fff;
-        margin-top: 6px;
-    }
+/* Window dots */
+.window-buttons {
+    position: absolute;
+    top: 16px;
+    left: 18px;
+    display: flex;
+    gap: 8px;
+}
+.btn-dot {
+    width: 12px; 
+    height: 12px;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0,0,0,.6);
+}
+.btn-close { background: var(--orange); }
+.btn-min   { background: var(--blue); }
+.btn-max   { background: var(--green); }
 
-    /* PERFECT CENTER LOADER */
-    .loader-wrapper {
-        position: relative;
-        width: 90px;
-        height: 90px;
-        margin: 0 auto;
-    }
+/* Logo */
+.logo-img {
+    width: 68px;
+    height: 68px;
+    object-fit: contain;
+    margin-bottom: 5px;
+    filter: drop-shadow(0 0 6px rgba(0,0,0,0.3));
+}
+.logo-title {
+    font-size: 28px;
+    color: white;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
 
-    .loader {
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        border: 6px solid rgba(255,255,255,0.28);
-        border-top-color: #4CAF50;
-        animation: spin 1.2s linear infinite;
-    }
+/* Loader */
+.loader-wrapper {
+    position: relative;
+    width: 92px;
+    height: 92px;
+    margin: 0 auto;
+}
+.loader {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 6px solid rgba(255,255,255,0.28);
+    border-top-color: var(--green);
+    animation: spin 1.2s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
+.countdown-text {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 34px;
+    font-weight: 700;
+    color: white;
+    line-height: 1;
+}
 
-    .countdown-text {
-        position: absolute;
-        top: 50%; left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 34px;
-        color: #fff;
-        font-weight: 700;
-        line-height: 1;
-        text-shadow: 0 0 8px #000;
-    }
+/* Status text */
+.text {
+    margin-top: 14px;
+    font-size: 16px;
+    color: white;
+}
+.ready {
+    color: var(--green);
+    font-weight: 700;
+    text-shadow: 0 0 8px var(--green);
+}
 
-    .text {
-        margin-top: 14px;
-        font-size: 16px;
-        color: #fff;
-    }
-    .ready {
-        color: #69F0AE;
-        font-weight: 700;
-        animation: glow 1.3s infinite;
-    }
+/* Button */
+.motivation-button {
+    width: 100%;
+    margin-top: 22px;
+    padding: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background: linear-gradient(145deg, var(--green), #0b8f64);
+    box-shadow: 0 4px 14px rgba(16,185,129,0.6);
+}
 
-    @keyframes glow {
-        0%,100% { text-shadow: 0 0 6px rgba(105,240,174,0.6); }
-        50% { text-shadow: 0 0 16px rgba(105,240,174,1); }
-    }
+#quote-display {
+    margin-top: 15px;
+    font-size: 15px;
+    color: #ffffffd9;
+    font-style: italic;
+    min-height: 28px;
+}
 
-    .motivation-button {
-        width: 100%;
-        margin-top: 22px;
-        padding: 12px;
-        font-size: 15px;
-        font-weight: 700;
-        color: #fff;
-        border: none;
-        border-radius: 12px;
-        cursor: pointer;
-        background: linear-gradient(145deg, #10b981, #059669);
-        box-shadow: 0 4px 14px rgba(16,185,129,0.7);
-    }
-
-    #quote-display {
-        margin-top: 14px;
-        min-height: 28px;
-        font-size: 15px;
-        color: #ffffffd9;
-        font-style: italic;
-    }
-
-    .credit {
-        margin-top: 28px;
-        font-size: 12px;
-        color: rgba(255,255,255,.9);
-    }
+.credit {
+    margin-top: 26px;
+    font-size: 12px;
+    color: rgba(255,255,255,.9);
+}
 </style>
 </head>
 
@@ -142,20 +146,18 @@
 
 <div class="glass-box">
 
-    <!-- Window dots -->
+    <!-- macOS dots -->
     <div class="window-buttons">
         <div class="btn-dot btn-close"></div>
         <div class="btn-dot btn-min"></div>
         <div class="btn-dot btn-max"></div>
     </div>
 
-    <!-- Logo -->
-    <div class="logo-section">
-        <span class="logo-icon">📆</span>
-        <h1 class="logo-title">KALENDER SOYA</h1>
-    </div>
+    <!-- LOGO (ganti logo.png dengan logo kamu) -->
+    <img src="logo.png" class="logo-img">
+    <h1 class="logo-title">KALENDER SOYA</h1>
 
-    <!-- Loader + Countdown -->
+    <!-- Loader -->
     <div class="loader-wrapper">
         <div class="loader"></div>
         <div class="countdown-text" id="countdown">10</div>
@@ -163,18 +165,14 @@
 
     <div id="status" class="text">Mengarahkan dalam 10 detik…</div>
 
-    <!-- Quotes -->
     <button class="motivation-button" id="quoteBtn">✨ Ubah Kutipan</button>
-
     <div id="quote-display">“Siapa monster sebenarnya?”</div>
 
     <div class="credit">PREMIUM UI | Design by KEIGO</div>
-
 </div>
 
-
 <script>
-/* ----- QUOTES MONSTER ----- */
+/* Quotes */
 const quotes = [
     "“Siapa monster sebenarnya?”",
     "“Kalau aku hilang, apakah ada yang akan mencariku?”",
@@ -186,20 +184,16 @@ const quotes = [
 
 const quoteDisplay = document.getElementById("quote-display");
 function setRandomQuote() {
-    quoteDisplay.innerText = quotes[Math.floor(Math.random() * quotes.length)];
+    quoteDisplay.innerText = quotes[Math.floor(Math.random()*quotes.length)];
 }
-
-/* Tombol manual tetap ada */
 document.getElementById("quoteBtn").addEventListener("click", setRandomQuote);
 
-/* ----- COUNTDOWN ----- */
+/* Countdown + Auto Quote */
 let time = 10;
 let cycle = 0;
 
 const cd = document.getElementById("countdown");
 const statusText = document.getElementById("status");
-
-cd.innerText = time;
 
 const timer = setInterval(() => {
     time--;
@@ -207,8 +201,6 @@ const timer = setInterval(() => {
     statusText.innerText = `Mengarahkan dalam ${time} detik…`;
 
     cycle++;
-
-    // Ganti quote setiap 3 detik
     if (cycle === 3) {
         setRandomQuote();
         cycle = 0;
@@ -222,9 +214,8 @@ const timer = setInterval(() => {
 
         setTimeout(() => {
             window.location.href = "https://forms.gle/5bxVr7yazJtkZ15DA";
-        }, 1100);
+        }, 1200);
     }
-
 }, 1000);
 </script>
 
