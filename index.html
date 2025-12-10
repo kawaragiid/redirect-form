@@ -41,12 +41,12 @@
         position: relative;
         width: 90%;
         max-width: 380px;
-        padding: 45px 32px;
-        border-radius: 22px;
-        background: rgba(255,255,255,0.13);
-        backdrop-filter: blur(22px);
-        -webkit-backdrop-filter: blur(22px);
-        border: 1px solid rgba(255,255,255,0.25);
+        padding: 55px 32px;
+        border-radius: 25px;
+        background: rgba(255,255,255,0.14);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid rgba(255,255,255,0.28);
         box-shadow: 0 8px 40px rgba(0,0,0,0.25);
         text-align: center;
         animation: fadeUp 0.8s ease forwards;
@@ -58,23 +58,23 @@
         to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ==== LOGO ==== */
+    /* ==== LOGO (BESARKAN) ==== */
     .logo {
-        width: 95px;
+        width: 125px;
         opacity: 0;
-        animation: fadeLogo 0.9s ease forwards 0.3s;
+        animation: fadeLogo 0.9s ease forwards 0.2s;
     }
 
     @keyframes fadeLogo {
-        from { opacity: 0; transform: scale(0.95); }
+        from { opacity: 0; transform: scale(0.85); }
         to   { opacity: 1; transform: scale(1); }
     }
 
     /* ==== PREMIUM LOADER ==== */
     .loader {
-        margin: 28px auto 15px auto;
-        width: 70px;
-        height: 70px;
+        margin: 32px auto 18px auto;
+        width: 75px;
+        height: 75px;
         border-radius: 50%;
         border: 6px solid rgba(255,255,255,0.3);
         border-top-color: #42a5f5;
@@ -96,11 +96,11 @@
     /* ==== TEXT ==== */
     .text {
         color: #ffffff;
-        margin-top: 18px;
+        margin-top: 20px;
         font-size: 17px;
         font-weight: 500;
         opacity: 0;
-        animation: fadeText 1s ease forwards 0.6s;
+        animation: fadeText 1s ease forwards 0.5s;
         text-shadow: 0 2px 6px rgba(0,0,0,0.4);
     }
 
@@ -109,22 +109,39 @@
         to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ==== CREDIT ==== */
+    /* ==== ---- SWIPE UP ICON ANIMATION ---- ==== */
+    .swipe {
+        margin-top: 32px;
+        opacity: 0;
+        animation: fadeSwipe 1s ease forwards 0.8s, swipeUpMotion 1.8s ease-in-out infinite;
+    }
+
+    @keyframes fadeSwipe {
+        from { opacity: 0; }
+        to   { opacity: 0.9; }
+    }
+
+    @keyframes swipeUpMotion {
+        0% { transform: translateY(6px); opacity: 0.9; }
+        50% { transform: translateY(-6px); opacity: 1; }
+        100% { transform: translateY(6px); opacity: 0.9; }
+    }
+
     .credit {
-        margin-top: 28px;
+        margin-top: 26px;
         font-size: 13px;
         color: rgba(255,255,255,0.75);
-        letter-spacing: 0.7px;
-        font-weight: 400;
         opacity: 0;
-        animation: fadeText 1s ease forwards 0.9s;
+        animation: fadeText 1s ease forwards 1s;
+        letter-spacing: 0.6px;
     }
 </style>
 
 <script>
+    /* Jalankan redirect setelah animasi “swipe up” */
     setTimeout(function() {
         window.location.href = "https://forms.gle/5bxVr7yazJtkZ15DA";
-    }, 3000);
+    }, 4500); // 4.5 detik → memberi waktu swipe up muncul dulu
 </script>
 
 </head>
@@ -139,6 +156,14 @@
     <div class="loader"></div>
 
     <div class="text">Mengarahkan ke formulir…</div>
+
+    <!-- Swipe up animation -->
+    <div class="swipe">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ffffffd0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 18V6" />
+            <path d="M6 12l6-6 6 6" />
+        </svg>
+    </div>
 
     <div class="credit">Design by Keigo</div>
 </div>
