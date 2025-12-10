@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
-<title>KALENDER SOYA</title>
+<title>KALENDER SOYA - Redirect Premium</title>
 
 <style>
     body {
@@ -18,22 +17,25 @@
         background: #000;
     }
 
-    /* ==== APPLE-STYLE MOVING BACKGROUND ==== */
+    /* ==== APPLE-STYLE MOVING BACKGROUND (Liquid Blob) ==== */
     .bg-anim {
         position: absolute;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle at 30% 30%, rgba(66,165,245,0.45), transparent 60%),
-                    radial-gradient(circle at 70% 70%, rgba(251,140,0,0.45), transparent 60%),
-                    radial-gradient(circle at 50% 50%, rgba(67,160,71,0.45), transparent 60%);
-        filter: blur(65px);
-        animation: moveBg 18s ease-in-out infinite alternate;
+        width: 250%;
+        height: 250%;
+        background: 
+            radial-gradient(circle at 10% 80%, rgba(34, 197, 94, 0.2), transparent 40%), /* Green */
+            radial-gradient(circle at 90% 20%, rgba(59, 130, 246, 0.2), transparent 40%), /* Blue */
+            radial-gradient(circle at 50% 50%, rgba(249, 115, 22, 0.2), transparent 40%); /* Orange */
+        filter: blur(96px); 
+        animation: moveBg 25s ease-in-out infinite alternate;
+        z-index: 1;
     }
 
     @keyframes moveBg {
-        0%   { transform: translate(-10%, -10%) scale(1); }
-        50%  { transform: translate(5%, 10%) scale(1.1); }
-        100% { transform: translate(-5%, -15%) scale(1.05); }
+        0%   { transform: translate(-20%, -20%) scale(1.05); }
+        33%  { transform: translate(15%, 5%) scale(1.1); }
+        66%  { transform: translate(-5%, 15%) scale(1.0); }
+        100% { transform: translate(-20%, -20%) scale(1.05); }
     }
 
     /* ==== LIQUID GLASS CONTAINER ==== */
@@ -41,132 +43,321 @@
         position: relative;
         width: 90%;
         max-width: 380px;
-        padding: 55px 32px;
-        border-radius: 25px;
-        background: rgba(255,255,255,0.14);
-        backdrop-filter: blur(25px);
-        -webkit-backdrop-filter: blur(25px);
-        border: 1px solid rgba(255,255,255,0.28);
-        box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+        padding: 40px 32px 32px;
+        border-radius: 35px;
+        background: rgba(255,255,255,0.2); 
+        backdrop-filter: blur(65px); 
+        -webkit-backdrop-filter: blur(65px);
+        border: 1px solid rgba(255,255,255,0.5); 
+        box-shadow: 0 10px 40px rgba(0,0,0,0.55); 
         text-align: center;
         animation: fadeUp 0.8s ease forwards;
         z-index: 2;
     }
 
+    /* Initial Fade In */
     @keyframes fadeUp {
         from { opacity: 0; transform: translateY(20px); }
-        to   { opacity: 1; transform: translateY(0); }
+        to  { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* KUNCI: Animasi Swipe Up Otomatis (Gaya iOS Lock Screen) */
+    @keyframes swipeUp {
+        from { opacity: 1; transform: translateY(0); }
+        to   { opacity: 0; transform: translateY(-120px); }
+    }
+    
+    .animate-swipeUp {
+        /* Menggunakan cubic-bezier untuk gerakan yang sangat smooth dan berbobot */
+        animation: swipeUp 1.2s cubic-bezier(0.4, 0.0, 0.2, 1.0) forwards; 
+    }
+    
+    /* Animasi Pulse Halus untuk Status Sebelum Redirect */
+    @keyframes subtlePulse {
+        0%, 100% { text-shadow: 0 0 5px rgba(105, 240, 174, 0.5), 0 0 1px #fff; }
+        50% { text-shadow: 0 0 15px rgba(105, 240, 174, 0.8), 0 0 2px #fff; }
     }
 
-    /* ==== APPLE WINDOW BUTTONS ==== */
+    /* Logo Styling */
+    .logo-section {
+        padding-top: 10px;
+        padding-bottom: 24px;
+        margin-bottom: 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.25); 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.7);
+    }
+    .logo-icon {
+        font-size: 70px;
+        margin-bottom: 4px;
+        filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.6));
+    }
+    .logo-title {
+        font-size: 30px;
+        font-weight: 800;
+        color: #ffffff;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+
+    /* Loader Styling */
+    .loader-container {
+        margin: 32px auto 18px auto;
+        width: 80px;
+        height: 80px;
+        position: relative;
+    }
+    .loader {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 6px solid rgba(255,255,255,0.4);
+        border-top-color: #4CAF50; 
+        animation: spin-loader 1.4s ease-in-out infinite; 
+    }
+    @keyframes spin-loader {
+        to { transform: rotate(360deg); }
+    }
+    
+    .countdown-text {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        font-size: 32px;
+        font-weight: 700;
+        margin: 0;
+        line-height: 1; 
+        transform: translateY(-2px); 
+        text-shadow: 0 0 10px rgba(0,0,0,1), 0 0 4px #fff; 
+    }
+    
+    /* Text and Credit */
+    .text {
+        color: #ffffff;
+        margin-top: 20px;
+        font-size: 17px;
+        font-weight: 500;
+        text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+        transition: all 0.5s ease;
+    }
+    
+    .text.ready-to-redirect {
+        /* Tambahkan efek neon dan pulse saat siap dialihkan */
+        color: #69F0AE; /* Hijau Neon */
+        font-weight: 700;
+        animation: subtlePulse 1.5s infinite;
+    }
+
+    .credit {
+        margin-top: 26px;
+        font-size: 13px;
+        color: rgba(255,255,255,0.95);
+        letter-spacing: 0.6px;
+    }
+    
+    /* Traffic Lights */
     .window-buttons {
         position: absolute;
         top: 16px;
         left: 18px;
         display: flex;
         gap: 8px;
-        opacity: 0;
-        animation: fadeButtons 0.8s ease forwards 0.35s;
     }
-
-    @keyframes fadeButtons {
-        from { opacity: 0; transform: scale(0.85); }
-        to   { opacity: 1; transform: scale(1); }
-    }
-
     .btn-dot {
         width: 12px;
         height: 12px;
         border-radius: 50%;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.8); 
+        opacity: 1; 
+        filter: brightness(1.2);
     }
+    .btn-close  { background: #FF5252; } 
+    .btn-min    { background: #FFEB3B; } 
+    .btn-max    { background: #69F0AE; } 
 
-    .btn-close  { background: #ff5f57; } /* merah */
-    .btn-min    { background: #ffbd2e; } /* kuning */
-    .btn-max    { background: #28c840; } /* hijau */
-
-    /* ==== LOGO ==== */
-    .logo {
-        width: 125px;
-        opacity: 0;
-        animation: fadeLogo 0.9s ease forwards 0.2s;
-    }
-
-    @keyframes fadeLogo {
-        from { opacity: 0; transform: scale(0.85); }
-        to   { opacity: 1; transform: scale(1); }
-    }
-
-    /* ==== PREMIUM LOADER ==== */
-    .loader {
-        margin: 32px auto 18px auto;
-        width: 75px;
-        height: 75px;
-        border-radius: 50%;
-        border: 6px solid rgba(255,255,255,0.3);
-        border-top-color: #42a5f5;
-        animation: spin 1.4s ease-in-out infinite,
-                   colorCycle 3.5s ease infinite;
-    }
-
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
-
-    @keyframes colorCycle {
-        0%   { border-top-color: #42a5f5; } 
-        33%  { border-top-color: #fb8c00; }
-        66%  { border-top-color: #43a047; }
-        100% { border-top-color: #42a5f5; }
-    }
-
-    .text {
-        color: #ffffff;
+    /* === GEMINI FEATURE STYLES === */
+    .motivation-section {
         margin-top: 20px;
-        font-size: 17px;
-        font-weight: 500;
-        opacity: 0;
-        animation: fadeText 1s ease forwards 0.5s;
-        text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    @keyframes fadeText {
-        from { opacity: 0; transform: translateY(5px); }
-        to   { opacity: 1; transform: translateY(0); }
+    .motivation-button {
+        background: linear-gradient(145deg, #10b981, #059669); /* Emerald Gradient */
+        color: white;
+        padding: 10px 15px;
+        border-radius: 10px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.7); /* Lebih menonjol */
+        border: none;
+        width: 100%;
+        margin-bottom: 15px;
+        /* Efek Neon Halus pada Tombol */
+        text-shadow: 0 0 5px rgba(255,255,255,0.5); 
+    }
+    .motivation-button:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.9); /* Bayangan hover lebih dramatis */
+    }
+    .motivation-button:disabled {
+        background: #4b5563;
+        cursor: not-allowed;
+        box-shadow: none;
+        text-shadow: none;
     }
 
-    /* ==== ---- SWIPE UP ICON ANIMATION ---- ==== */
-    .swipe {
-        margin-top: 32px;
-        opacity: 0;
-        animation: fadeSwipe 1s ease forwards 0.8s, swipeUpMotion 1.8s ease-in-out infinite;
-    }
-
-    @keyframes fadeSwipe {
-        from { opacity: 0; }
-        to   { opacity: 0.9; }
-    }
-
-    @keyframes swipeUpMotion {
-        0% { transform: translateY(6px); opacity: 0.9; }
-        50% { transform: translateY(-6px); opacity: 1; }
-        100% { transform: translateY(6px); opacity: 0.9; }
-    }
-
-    .credit {
-        margin-top: 26px;
-        font-size: 13px;
-        color: rgba(255,255,255,0.75);
-        opacity: 0;
-        animation: fadeText 1s ease forwards 1s;
-        letter-spacing: 0.6px;
+    #quote-display {
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px;
+        font-size: 15px;
     }
 </style>
 
 <script>
-    setTimeout(function() {
-        window.location.href = "https://forms.gle/5bxVr7yazJtkZ15DA";
-    }, 4500);
+    // --- KONFIGURASI ---
+    const REDIRECT_URL = "https://forms.gle/5bxVr7yazJtkZ15DA";
+    const REDIRECT_TIMEOUT_MS = 10000; // Ditingkatkan menjadi 10 detik
+    const ANIMATION_DURATION_MS = 1200; 
+    // --- END KONFIGURASI ---
+
+    // =================================================================
+    // === FUNGSI GEMINI API UNTUK MOTIVASI HARIAN ===
+    // =================================================================
+
+    // Fungsi utilitas untuk Exponential Backoff (meningkatkan keandalan panggilan API)
+    async function fetchWithBackoff(url, options, maxRetries = 5) {
+        for (let i = 0; i < maxRetries; i++) {
+            try {
+                const response = await fetch(url, options);
+                if (!response.ok) {
+                    if (response.status === 429 && i < maxRetries - 1) {
+                        const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+                        console.warn(`Rate limit exceeded (429). Retrying in ${delay / 1000}s...`);
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        continue;
+                    }
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response;
+            } catch (error) {
+                if (i === maxRetries - 1) {
+                    console.error("Failed to fetch after all retries.", error);
+                    throw error;
+                }
+                const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+                console.warn(`Fetch failed. Retrying in ${delay / 1000}s...`);
+                await new Promise(resolve => setTimeout(resolve, delay));
+            }
+        }
+    }
+
+    // Fungsi utama untuk memanggil Gemini API
+    async function generateDailyMotivation() {
+        const motivationButton = document.getElementById('motivation-button');
+        const quoteDisplay = document.getElementById('quote-display');
+
+        motivationButton.disabled = true;
+        motivationButton.textContent = '✨ Mencari Inspirasi...';
+        quoteDisplay.innerHTML = `<p class="text-white/70 italic animate-pulse">Memanggil kecerdasan Gemini...</p>`;
+
+        const systemPrompt = "Anda adalah seorang guru spiritual yang memberikan kutipan motivasi, ringkas, dan unik dalam Bahasa Indonesia. Kutipan harus relevan dengan perencanaan, waktu, atau tujuan hidup. Berikan hanya kutipan itu sendiri, tanpa awalan atau akhiran.";
+        const userQuery = "Berikan satu kutipan motivasi singkat yang inspiratif untuk hari ini.";
+
+        const payload = {
+            contents: [{ parts: [{ text: userQuery }] }],
+            systemInstruction: {
+                parts: [{ text: systemPrompt }]
+            },
+        };
+
+        const apiKey = ""; // Kunci API akan disediakan oleh lingkungan Canvas
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+        try {
+            const response = await fetchWithBackoff(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+            const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+            if (text) {
+                quoteDisplay.innerHTML = `<p class="text-white italic text-base font-semibold transition duration-500 transform scale-105">"${text}"</p>`;
+            } else {
+                quoteDisplay.innerHTML = `<p class="text-red-400">Gagal mendapatkan kutipan. Coba lagi!</p>`;
+            }
+        } catch (error) {
+            console.error("Gemini API Error:", error);
+            quoteDisplay.innerHTML = `<p class="text-red-400">Terjadi kesalahan koneksi. (Lihat konsol)</p>`;
+        } finally {
+            motivationButton.disabled = false;
+            motivationButton.textContent = '✨ Dapatkan Kutipan Baru';
+        }
+    }
+    // =================================================================
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const glassBox = document.getElementById('glass-box');
+        const countdownElement = document.getElementById('countdown-text');
+        const statusElement = document.getElementById('status-text');
+        const motivationButton = document.getElementById('motivation-button');
+        
+        // Panggil motivasi harian saat DOM dimuat
+        generateDailyMotivation();
+
+        let remainingSeconds = Math.ceil(REDIRECT_TIMEOUT_MS / 1000);
+        
+        // Fungsi untuk memperbarui tampilan countdown
+        function updateCountdown() {
+            if (remainingSeconds > 0) {
+                countdownElement.textContent = remainingSeconds;
+                statusElement.textContent = `Mengarahkan ke formulir dalam ${remainingSeconds} detik...`;
+                remainingSeconds--;
+            } else {
+                clearInterval(interval);
+                // 1. Update status dan tambahkan kelas neon pulse
+                statusElement.textContent = "Mengarahkan Otomatis...";
+                statusElement.classList.add('ready-to-redirect');
+                countdownElement.textContent = "GO";
+                
+                // 2. Terapkan animasi Swipe Up (Gaya iOS Lock Screen)
+                glassBox.classList.add('animate-swipeUp');
+
+                // 3. Lakukan Redireksi setelah animasi selesai
+                setTimeout(() => {
+                    window.location.href = REDIRECT_URL;
+                }, ANIMATION_DURATION_MS);
+            }
+        }
+
+        // Jalankan countdown awal
+        countdownElement.textContent = remainingSeconds;
+        remainingSeconds--;
+        
+        // Atur interval setiap 1 detik
+        const interval = setInterval(updateCountdown, 1000);
+
+        // Tambahkan event listener untuk tombol motivasi
+        motivationButton.addEventListener('click', generateDailyMotivation);
+    });
+
 </script>
 
 </head>
@@ -175,7 +366,7 @@
 
 <div class="bg-anim"></div>
 
-<div class="glass-box">
+<div class="glass-box" id="glass-box">
 
     <!-- MACOS WINDOW DOTS -->
     <div class="window-buttons">
@@ -184,21 +375,34 @@
         <div class="btn-dot btn-max"></div>
     </div>
 
-    <img src="logo.png" class="logo" alt="Logo">
-
-    <div class="loader"></div>
-
-    <div class="text">Mengarahkan ke formulir…</div>
-
-    <div class="swipe">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ffffffd0" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 18V6" />
-            <path d="M6 12l6-6 6 6" />
-        </svg>
+    <!-- LOGO SECTION: Tempat Khusus untuk Logo -->
+    <div class="logo-section">
+        <span class="logo-icon" role="img" aria-label="Soybean and Calendar">🗓️</span>
+        <h1 class="logo-title">KALENDER SOYA</h1>
     </div>
 
-    <div class="credit">Design by Keigo</div>
+    <!-- PREMIUM LOADER CONTAINER -->
+    <div class="loader-container">
+        <!-- Loader Spinning -->
+        <div class="loader"></div>
+        <!-- Countdown Text Overlay (TIDAK BERPUTAR) -->
+        <div class="countdown-text" id="countdown-text"></div>
+    </div>
+
+    <div class="text" id="status-text">Mengarahkan ke formulir dalam 10 detik...</div>
+
+    <!-- === GEMINI LLM FEATURE === -->
+    <div class="motivation-section">
+        <button id="motivation-button" class="motivation-button">
+            ✨ Dapatkan Motivasi Harian
+        </button>
+        <div id="quote-display">
+            <p class="text-white/70 italic">Kutipan akan muncul di sini.</p>
+        </div>
+    </div>
+    <!-- === END GEMINI FEATURE === -->
+
+    <div class="credit">PREMIUM UI | Design by KEIGO</div>
 </div>
 
 </body>
