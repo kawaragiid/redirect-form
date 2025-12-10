@@ -39,6 +39,7 @@ body {
     z-index: -5; /* Di belakang blobs dan konten */
     opacity: 0.3; /* Opacity 30% sesuai request */
     pointer-events: none; /* Agar tidak bisa diklik */
+    transition: opacity 1s ease;
 }
 
 /* Logika Display Video Berdasarkan Ukuran Layar */
@@ -113,19 +114,33 @@ body {
     100% { transform: translate(20px, -20px) scale(1.1); }
 }
 
-/* ============= GLASS CARD ============= */
+/* ============= LIQUID GLASS CARD ============= */
 .glass-box {
     position: relative;
     width: 85%;
     max-width: 360px;
     padding: 40px 30px;
     border-radius: 32px;
-    /* Glassmorphism yang lebih halus */
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    
+    /* Liquid Glass Effect ala Apple */
+    background: linear-gradient(
+        135deg, 
+        rgba(255, 255, 255, 0.25), 
+        rgba(255, 255, 255, 0.05)
+    );
+    backdrop-filter: blur(50px) saturate(140%);
+    -webkit-backdrop-filter: blur(50px) saturate(140%);
+    
+    /* Border halus untuk efek 3D */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    
+    /* Shadow berlapis untuk kedalaman */
+    box-shadow: 
+        0 30px 60px rgba(0, 0, 0, 0.4), 
+        inset 0 0 0 1px rgba(255, 255, 255, 0.15); /* Inner rim light */
+        
     text-align: center;
     
     /* Persiapan animasi exit (Unlock) */
@@ -245,6 +260,16 @@ body {
     min-height: 24px;
 }
 
+/* Hint Text untuk sound */
+.tap-hint {
+    font-size: 10px;
+    opacity: 0.5;
+    margin-bottom: 5px;
+    animation: pulse 2s infinite;
+}
+@keyframes pulse { 0% {opacity:0.3} 50% {opacity:0.7} 100% {opacity:0.3} }
+
+
 /* Button */
 .motivation-button {
     width: 100%;
@@ -288,22 +313,23 @@ body {
 <body>
 
     <!-- 
-        VIDEO BACKGROUND 
-        Ganti 'src' dengan URL video asli Anda.
-        Saya menggunakan video placeholder alam bebas hak cipta sebagai contoh.
+        VIDEO BACKGROUND:
+        Strategi Autoplay + Sound:
+        1. 'muted' ditambahkan agar video otomatis JALAN visualnya (browser policy).
+        2. Kita menggunakan Javascript untuk melepas 'mute' saat user pertama kali menyentuh layar.
     -->
     
     <!-- Video Landscape (Desktop/Tablet) -->
-    <video autoplay unmuted loop playsinline class="video-background" id="vid-landscape">
+    <video autoplay muted loop playsinline class="video-background" id="vid-landscape">
         <source src="https://videos.pexels.com/video-files/3129671/3129671-hd_1920_1080_30fps.mp4" type="video/mp4">
     </video>
 
     <!-- Video Portrait (HP/Mobile) -->
-    <video autoplay unmuted loop playsinline class="video-background" id="vid-portrait">
+    <video autoplay muted loop playsinline class="video-background" id="vid-portrait">
         <source src="pot.mp4" type="video/mp4">
     </video>
 
-    <!-- Background Blobs for Matte Effect (Tetap ada di atas video untuk tint warna) -->
+    <!-- Background Blobs -->
     <div class="background-blobs">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
@@ -321,21 +347,21 @@ body {
 
         <!-- LOGO -->
         <div class="logo-container">
-            <!-- Gunakan onerror untuk fallback jika gambar tidak ada -->
             <img src="logo.png" class="logo-img" onerror="this.style.display='none'; document.getElementById('fb-logo').style.display='flex'">
-            <!-- Placeholder logo (tampil jika logo.png tidak ditemukan) -->
             <div id="fb-logo" class="logo-placeholder" style="display:none">📅</div>
         </div>
         
         <h1 class="logo-title">KALENDER SOYA</h1>
 
-        <!-- Loader dengan Animasi swipeFloat -->
         <div class="loader-wrapper">
             <div class="loader-ring"></div>
             <div class="countdown-text" id="countdown">10</div>
         </div>
 
         <div id="status" class="text">Mengarahkan dalam 10 detik…</div>
+
+        <!-- Hint kecil agar user tahu tap layar akan menyalakan suara -->
+        <div class="tap-hint" id="soundHint">Tap layar untuk suara 🔊</div>
 
         <button class="motivation-button" id="quoteBtn">✨ Ubah Kutipan</button>
         <div id="quote-display">“Siapa monster sebenarnya?”</div>
@@ -344,6 +370,34 @@ body {
     </div>
 
 <script>
+/* Audio Auto-Unmute Logic 
+   Browser tidak mengizinkan autoplay dengan suara tanpa interaksi user.
+   Script ini menyalakan suara saat user tap/klik di mana saja pertama kali.
+*/
+function enableSound() {
+    const vids = document.querySelectorAll('video');
+    vids.forEach(v => {
+        v.muted = false; // Matikan bisu
+        // Pastikan play ulang jika sempat terhenti
+        v.play().catch(error => {
+            console.log("Autoplay audio blocked until interaction");
+        });
+    });
+    
+    // Hilangkan hint setelah suara aktif
+    const hint = document.getElementById('soundHint');
+    if(hint) hint.style.opacity = '0';
+
+    // Hapus listener agar tidak dijalankan berulang kali
+    document.removeEventListener('click', enableSound);
+    document.removeEventListener('touchstart', enableSound);
+}
+
+// Pasang pendengar interaksi di seluruh body
+document.addEventListener('click', enableSound);
+document.addEventListener('touchstart', enableSound);
+
+
 /* Quotes System */
 const quotes = [
     "“Siapa monster sebenarnya?”",
@@ -359,7 +413,7 @@ const quoteDisplay = document.getElementById("quote-display");
 const quoteBtn = document.getElementById("quoteBtn");
 
 function setRandomQuote() {
-    // Efek fade out-in sederhana untuk teks
+    // Efek fade out-in
     quoteDisplay.style.opacity = 0;
     setTimeout(() => {
         quoteDisplay.innerText = quotes[Math.floor(Math.random()*quotes.length)];
@@ -369,7 +423,7 @@ function setRandomQuote() {
 
 quoteBtn.addEventListener("click", setRandomQuote);
 
-/* Countdown Logic & Animations */
+/* Countdown Logic */
 let time = 10;
 let cycle = 0;
 
@@ -377,7 +431,6 @@ const cd = document.getElementById("countdown");
 const statusText = document.getElementById("status");
 const mainCard = document.getElementById("mainCard");
 
-// Transisi halus untuk opacity quote saat load
 quoteDisplay.style.transition = "opacity 0.2s";
 
 const timer = setInterval(() => {
@@ -385,7 +438,6 @@ const timer = setInterval(() => {
     cd.innerText = time;
     statusText.innerText = `Mengarahkan dalam ${time} detik…`;
 
-    // Ganti quote secara otomatis setiap 3 detik
     cycle++;
     if (cycle === 3) {
         setRandomQuote();
@@ -397,16 +449,13 @@ const timer = setInterval(() => {
         cd.innerText = "GO";
         statusText.innerText = "Membuka...";
         
-        // REQUEST #3: Animasi seperti membuka Lock Screen
-        // Menambahkan class untuk mentrigger animasi slide up
         setTimeout(() => {
             mainCard.classList.add("unlock-screen");
         }, 300);
 
-        // Redirect setelah animasi selesai
         setTimeout(() => {
             window.location.href = "https://forms.gle/5bxVr7yazJtkZ15DA";
-        }, 1200); // Waktu disesuaikan dengan durasi animasi CSS
+        }, 1200);
     }
 }, 1000);
 </script>
