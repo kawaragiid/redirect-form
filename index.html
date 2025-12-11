@@ -36,10 +36,22 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    z-index: -5; /* Di belakang blobs dan konten */
-    opacity: 0.3; /* Opacity 30% sesuai request */
     pointer-events: none; /* Agar tidak bisa diklik */
-    transition: opacity 1s ease;
+    
+    /* MODIFIED: Transisi opacity agar perpindahan landscape/portrait halus */
+    transition: opacity 0.5s ease, visibility 0.5s;
+    
+    /* Default state: Hidden tapi tetap ada di DOM (Bukan display:none) */
+    opacity: 0;
+    z-index: -10;
+    visibility: hidden; 
+}
+
+/* Class untuk video yang AKTIF */
+.video-active {
+    opacity: 0.3 !important; /* Opacity 30% sesuai request */
+    z-index: -5 !important;
+    visibility: visible !important;
 }
 
 /* ============= BACKGROUND BLUR (APPLE STYLE) ============= */
@@ -329,15 +341,16 @@ body {
         VIDEO BACKGROUND:
         Autoplay logic dikontrol oleh JS di bawah.
         JS akan memastikan hanya 1 video yang berjalan sesuai ukuran layar.
+        Tambahkan 'autoplay' di HTML sebagai fallback untuk Android.
     -->
     
     <!-- Video Landscape (Desktop/Tablet) -->
-    <video muted loop playsinline class="video-background" id="vid-landscape">
+    <video autoplay muted loop playsinline class="video-background" id="vid-landscape">
         <source src="pet.mp4" type="video/mp4">
     </video>
 
     <!-- Video Portrait (HP/Mobile) -->
-    <video muted loop playsinline class="video-background" id="vid-portrait">
+    <video autoplay muted loop playsinline class="video-background" id="vid-portrait">
         <source src="pot.mp4" type="video/mp4">
     </video>
 
@@ -389,32 +402,54 @@ const vidPortrait = document.getElementById("vid-portrait");
 
 // Fungsi untuk mengatur mana video yang aktif berdasarkan lebar layar
 function manageVideoVisibility() {
+    // Deteksi jika layar lebih kecil dari 768px (Mobile)
     const isPortraitMode = window.matchMedia("(max-width: 768px)").matches;
 
     if (isPortraitMode) {
         // --- MODE HP (PORTRAIT) ---
+        // Sembunyikan Landscape (jangan pause total agar tidak reset buffer, cukup sembunyikan)
+        vidLandscape.classList.remove('video-active');
         vidLandscape.pause();
-        vidLandscape.style.display = 'none';
         
-        vidPortrait.style.display = 'block';
+        // Tampilkan Portrait
+        vidPortrait.classList.add('video-active');
+        
+        // Coba play jika belum jalan
         if (vidPortrait.paused) {
-            vidPortrait.play().catch(e => console.log("Autoplay blocked until interaction"));
+            vidPortrait.play().catch(e => console.log("Autoplay Portrait blocked:", e));
         }
     } else {
         // --- MODE DESKTOP (LANDSCAPE) ---
+        // Sembunyikan Portrait
+        vidPortrait.classList.remove('video-active');
         vidPortrait.pause();
-        vidPortrait.style.display = 'none';
 
-        vidLandscape.style.display = 'block';
+        // Tampilkan Landscape
+        vidLandscape.classList.add('video-active');
+        
+        // Coba play jika belum jalan
         if (vidLandscape.paused) {
-            vidLandscape.play().catch(e => console.log("Autoplay blocked until interaction"));
+            vidLandscape.play().catch(e => console.log("Autoplay Landscape blocked:", e));
         }
     }
 }
 
 // Jalankan saat pertama kali load
-manageVideoVisibility();
+document.addEventListener("DOMContentLoaded", () => {
+    manageVideoVisibility();
+});
 window.addEventListener('resize', manageVideoVisibility);
+
+// FIX ANDROID: Paksa play saat sentuhan pertama jika autoplay gagal
+function forceWakeVideo() {
+    const isPortraitMode = window.matchMedia("(max-width: 768px)").matches;
+    const activeVideo = isPortraitMode ? vidPortrait : vidLandscape;
+    
+    if(activeVideo.paused) {
+        activeVideo.play().catch(e => console.log("Force wake error:", e));
+    }
+}
+document.addEventListener('touchstart', forceWakeVideo, {once:true});
 
 
 // --- LOGIKA INTERAKSI USER ---
@@ -462,6 +497,8 @@ function startExperience() {
     // 1. Unmute KEDUA Video 
     vidLandscape.muted = false;
     vidPortrait.muted = false;
+    
+    // Pastikan video aktif berjalan & bersuara
     manageVideoVisibility(); 
 
     // 2. Hilangkan Hint, Listener, dan buat BOX TRANSPARAN
