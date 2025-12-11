@@ -407,7 +407,7 @@ function manageVideoVisibility() {
 
     if (isPortraitMode) {
         // --- MODE HP (PORTRAIT) ---
-        // Sembunyikan Landscape (jangan pause total agar tidak reset buffer, cukup sembunyikan)
+        // Sembunyikan Landscape (pause untuk hemat resource)
         vidLandscape.classList.remove('video-active');
         vidLandscape.pause();
         
@@ -438,7 +438,35 @@ function manageVideoVisibility() {
 document.addEventListener("DOMContentLoaded", () => {
     manageVideoVisibility();
 });
-window.addEventListener('resize', manageVideoVisibility);
+
+// FIX JITTER: Gunakan debounce untuk resize agar tidak spamming saat scroll di Android
+let resizeTimer;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(manageVideoVisibility, 100);
+});
+
+
+// FIX ANDROID BUG: "WATCHDOG" (Penjaga Video)
+// Script ini akan berjalan setiap 1.5 detik untuk memastikan video aktif tetap berjalan
+// Android sering menidurkan video background untuk hemat baterai
+setInterval(() => {
+    const isPortraitMode = window.matchMedia("(max-width: 768px)").matches;
+    const activeVideo = isPortraitMode ? vidPortrait : vidLandscape;
+    
+    // Jika video seharusnya aktif tapi mati (paused) & halaman sedang dilihat
+    if (activeVideo.paused && document.visibilityState === 'visible') {
+        console.log("Watchdog: Waking up video...");
+        activeVideo.play().catch(e => { /* Ignore abort error */ });
+    }
+}, 1500);
+
+// FIX ANDROID: Restart video saat kembali ke Tab
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === 'visible') {
+        manageVideoVisibility();
+    }
+});
 
 // FIX ANDROID: Paksa play saat sentuhan pertama jika autoplay gagal
 function forceWakeVideo() {
