@@ -42,24 +42,6 @@ body {
     transition: opacity 1s ease;
 }
 
-/* Logika Display Video Berdasarkan Ukuran Layar */
-#vid-landscape {
-    display: block;
-}
-#vid-portrait {
-    display: none;
-}
-
-/* Jika layar HP / Portrait (lebar max 768px) */
-@media (max-width: 768px) {
-    #vid-landscape {
-        display: none;
-    }
-    #vid-portrait {
-        display: block;
-    }
-}
-
 /* ============= BACKGROUND BLUR (APPLE STYLE) ============= */
 .background-blobs {
     position: absolute;
@@ -122,47 +104,74 @@ body {
     padding: 40px 30px;
     border-radius: 32px;
     
-    /* MODIFIED: Liquid Glass Effect - LEBIH TRANSPARAN */
+    /* Liquid Glass Effect Initial State */
     background: linear-gradient(
         135deg, 
-        rgba(243, 236, 236, 0.007), /* Dikurangi agar lebih bening */
+        rgba(255, 255, 255, 0.10),
         rgba(255, 255, 255, 0.02)
     );
-    /* Blur sedikit dikurangi agar background di belakang lebih terlihat */
     backdrop-filter: blur(30px) saturate(180%);
     -webkit-backdrop-filter: blur(30px) saturate(180%);
     
-    /* Border lebih tipis dan transparan */
-    border: 1px solid rgba(255, 255, 255, 0.055);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     border-right: 1px solid rgba(255, 255, 255, 0.05);
     
-    /* Shadow tetap ada untuk kedalaman 3D */
     box-shadow: 
-        0 30px 60px rgba(199, 198, 198, 0.4), 
-        inset 0 0 0 1px rgba(255, 255, 255, 0.1); /* Inner rim light */
+        0 30px 60px rgba(0, 0, 0, 0.4), 
+        inset 0 0 0 1px rgba(255, 255, 255, 0.1);
         
     text-align: center;
     
-    /* Persiapan animasi exit (Unlock) */
+    /* MODIFIED: Transisi ditambahkan untuk background, border, dll */
     transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
-                opacity 0.6s ease-in;
+                opacity 0.6s ease-in,
+                background 1.5s ease,       /* Transisi background halus */
+                backdrop-filter 1.5s ease,  /* Transisi blur halus */
+                border-color 1.5s ease,
+                box-shadow 1.5s ease;
 }
 
-/* Class untuk animasi Unlock Screen (Slide Up) */
+/* CLASS BARU: Mode Super Clear (Diaktifkan saat Start) */
+.glass-box.transparent-mode {
+    /* 1. Background BENAR-BENAR transparant */
+    background: transparent !important;
+
+    /* 2. Blur DIHILANGKAN total agar seperti bolong */
+    backdrop-filter: blur(0px) !important;
+    -webkit-backdrop-filter: blur(0px) !important;
+
+    /* 3. Border DIPERTEGAS & DIPERTEBAL sedikit agar terlihat efek 'distorsi' di pinggir */
+    border: 1.5px solid rgba(255, 255, 255, 0.4) !important;
+    border-bottom: 1.5px solid rgba(255, 255, 255, 0.2) !important;
+
+    /* 4. Shadow untuk memberi kesan ada kaca di pinggiran (Inner Glow & Outer Glow) */
+    box-shadow: 
+        inset 0 0 20px rgba(255, 255, 255, 0.1), /* Kilau dalam */
+        0 0 20px rgba(255, 255, 255, 0.05) !important; /* Kilau luar halus */
+}
+
+/* Class untuk animasi Unlock Screen (Slide Up - Final Exit) */
 .glass-box.unlock-screen {
     transform: translateY(-120vh) scale(0.95);
     opacity: 0;
 }
 
-/* Window dots */
+/* Window dots (Akan ikut hilang pelan-pelan jika diinginkan, atau tetap melayang) 
+   Di sini saya biarkan tetap terlihat sebentar lalu ikut container.
+*/
 .window-buttons {
     position: absolute;
     top: 20px;
     left: 20px;
     display: flex;
     gap: 8px;
+    transition: opacity 1s ease;
 }
+.glass-box.transparent-mode .window-buttons {
+    opacity: 0; /* Dots ikut menghilang agar terlihat bersih */
+}
+
 .btn-dot {
     width: 12px; 
     height: 12px;
@@ -318,19 +327,18 @@ body {
 
     <!-- 
         VIDEO BACKGROUND:
-        Strategi Autoplay + Sound:
-        1. 'muted' ditambahkan agar video otomatis JALAN visualnya (browser policy).
-        2. Kita menggunakan Javascript untuk melepas 'mute' saat user pertama kali menyentuh layar.
+        Autoplay logic dikontrol oleh JS di bawah.
+        JS akan memastikan hanya 1 video yang berjalan sesuai ukuran layar.
     -->
     
     <!-- Video Landscape (Desktop/Tablet) -->
-    <video autoplay muted loop playsinline class="video-background" id="vid-landscape">
-        <source src="pet.mp4" type="video/mp4">
+    <video muted loop playsinline class="video-background" id="vid-landscape">
+        <source src="pot.mp4" type="video/mp4">
     </video>
 
     <!-- Video Portrait (HP/Mobile) -->
-    <video autoplay muted loop playsinline class="video-background" id="vid-portrait">
-        <source src="pot.mp4" type="video/mp4">
+    <video muted loop playsinline class="video-background" id="vid-portrait">
+        <source src="pet.mp4" type="video/mp4">
     </video>
 
     <!-- Background Blobs -->
@@ -374,18 +382,47 @@ body {
     </div>
 
 <script>
-/* LOGIKA BARU: START EXPERIENCE
-   1. Countdown diam di angka 10.
-   2. Video jalan tapi Muted.
-   3. Ketika user klik dimanapun:
-      - Video Unmute
-      - Countdown mulai berjalan
-*/
+/* LOGIKA MANAJEMEN VIDEO & EXPERIENCE */
+
+const vidLandscape = document.getElementById("vid-landscape");
+const vidPortrait = document.getElementById("vid-portrait");
+
+// Fungsi untuk mengatur mana video yang aktif berdasarkan lebar layar
+function manageVideoVisibility() {
+    const isPortraitMode = window.matchMedia("(max-width: 768px)").matches;
+
+    if (isPortraitMode) {
+        // --- MODE HP (PORTRAIT) ---
+        vidLandscape.pause();
+        vidLandscape.style.display = 'none';
+        
+        vidPortrait.style.display = 'block';
+        if (vidPortrait.paused) {
+            vidPortrait.play().catch(e => console.log("Autoplay blocked until interaction"));
+        }
+    } else {
+        // --- MODE DESKTOP (LANDSCAPE) ---
+        vidPortrait.pause();
+        vidPortrait.style.display = 'none';
+
+        vidLandscape.style.display = 'block';
+        if (vidLandscape.paused) {
+            vidLandscape.play().catch(e => console.log("Autoplay blocked until interaction"));
+        }
+    }
+}
+
+// Jalankan saat pertama kali load
+manageVideoVisibility();
+window.addEventListener('resize', manageVideoVisibility);
+
+
+// --- LOGIKA INTERAKSI USER ---
 
 let time = 10;
 let cycle = 0;
-let isStarted = false; // Flag untuk memastikan tidak double start
-let timer = null; // Variable timer disimpan disini
+let isStarted = false; 
+let timer = null; 
 
 const cd = document.getElementById("countdown");
 const statusText = document.getElementById("status");
@@ -394,7 +431,6 @@ const tapHint = document.getElementById("soundHint");
 const quoteDisplay = document.getElementById("quote-display");
 const quoteBtn = document.getElementById("quoteBtn");
 
-// Quotes System
 const quotes = [
     "“Siapa monster sebenarnya?”",
     "“Kalau aku hilang, apakah ada yang akan mencariku?”",
@@ -414,26 +450,26 @@ function setRandomQuote() {
 }
 
 quoteBtn.addEventListener("click", (e) => {
-    e.stopPropagation(); // Mencegah klik tombol mentrigger startExperience jika belum mulai
+    e.stopPropagation(); 
     setRandomQuote();
-    // Jika user klik tombol tapi belum start, kita anggap itu juga sinyal start
     if(!isStarted) startExperience();
 });
 
-// FUNGSI UTAMA UNTUK MEMULAI SEMUANYA
 function startExperience() {
-    if (isStarted) return; // Stop jika sudah berjalan
+    if (isStarted) return; 
     isStarted = true;
 
-    // 1. Unmute Video
-    const vids = document.querySelectorAll('video');
-    vids.forEach(v => {
-        v.muted = false;
-        v.play().catch(error => console.log("Video play error:", error));
-    });
+    // 1. Unmute KEDUA Video 
+    vidLandscape.muted = false;
+    vidPortrait.muted = false;
+    manageVideoVisibility(); 
 
-    // 2. Hilangkan Hint & Listener
+    // 2. Hilangkan Hint, Listener, dan buat BOX TRANSPARAN
     if(tapHint) tapHint.style.opacity = '0';
+    
+    // --> INI YANG MEMBUAT BOX JADI BENING <--
+    mainCard.classList.add('transparent-mode');
+    
     document.removeEventListener('click', startExperience);
     document.removeEventListener('touchstart', startExperience);
 
@@ -467,11 +503,9 @@ function startExperience() {
     }, 1000);
 }
 
-// Pasang pendengar interaksi
 document.addEventListener('click', startExperience);
 document.addEventListener('touchstart', startExperience);
 
-// Init transisi
 quoteDisplay.style.transition = "opacity 0.2s";
 
 </script>
